@@ -24,15 +24,25 @@ namespace ComputerNetworkSimulatorAPI.Controllers
         }
 
         [HttpPost("TestPost")]
-        public ActionResult TestPost([FromBody] TestDTO obj)
+        public ActionResult TestPost([FromBody] List<FatherDTO> obj)
         {
             return Ok(obj);
         }
     }
 
-    public class TestDTO
+    public class Kid1DTO 
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public string Kid1 { get; set; }
+    }
+
+    public class Kid2DTO 
+    {
+        public string Kid2 { get; set; }
+    }
+
+    public class FatherDTO
+    {
+        public Kid1DTO Kid1 { get; set; }
+        public Kid2DTO Kid2 { get; set; }
     }
 }
