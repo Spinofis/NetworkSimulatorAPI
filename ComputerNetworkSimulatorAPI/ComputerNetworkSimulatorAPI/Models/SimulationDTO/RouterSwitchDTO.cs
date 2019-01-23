@@ -7,7 +7,7 @@ namespace ComputerNetworkSimulatorAPI.Models.SimulationDTO
 {
     public class RouterSwitchDTO
     {
-        public RouterDTO Routers { get; set; }
-        public SwitchDTO Switches { get; set; }
+        public RouterDTO Router { get; set; }
+        public SwitchDTO Switch { get; set; }
     }
 }

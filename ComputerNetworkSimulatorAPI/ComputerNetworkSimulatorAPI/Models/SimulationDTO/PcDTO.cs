@@ -13,5 +13,6 @@ namespace ComputerNetworkSimulatorAPI.Models.SimulationDTO
         public string Name { get; set; }
         public string Ip { get; set; }
         public string Mask { get; set; }
+        public string Gateway { get; set; }
     }
 }

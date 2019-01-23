@@ -9,7 +9,7 @@ namespace ComputerNetworkSimulatorAPI.Models.SimulationDTO
     {
         public int Id { get; set; }
         public string NodeNumber { get; set; }
-        public int PcNumber { get; set; }
+        public int SwitchNumber { get; set; }
         public string Name { get; set; }
     }
 }

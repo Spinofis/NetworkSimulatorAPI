@@ -7,7 +7,7 @@ namespace ComputerNetworkSimulatorAPI.Models.SimulationDTO
 {
     public class PcSwitchDTO
     {
-        public PcDTO Pcs { get; set; }
-        public SwitchDTO Switches { get; set; }
+        public PcDTO Pc { get; set; }
+        public SwitchDTO Switch { get; set; }
     }
 }
