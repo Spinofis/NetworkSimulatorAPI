@@ -36,9 +36,12 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
         {
             modelBuilder.Entity<Pc>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Gateway)
+                    .HasColumnName("gateway")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IdSim).HasColumnName("id_sim");
 
@@ -57,6 +60,13 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.NodeNumber)
+                    .HasColumnName("node_number")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PcNumber).HasColumnName("pc_number");
+
                 entity.HasOne(d => d.IdSimNavigation)
                     .WithMany(p => p.Pc)
                     .HasForeignKey(d => d.IdSim)
@@ -67,9 +77,7 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
             {
                 entity.ToTable("Pc_Switch");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdPc).HasColumnName("id_pc");
 
@@ -90,9 +98,7 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
 
             modelBuilder.Entity<Router>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdSim).HasColumnName("id_sim");
 
@@ -100,6 +106,13 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
                     .HasColumnName("name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.NodeNumber)
+                    .HasColumnName("node_number")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RouterNumber).HasColumnName("router_number");
 
                 entity.HasOne(d => d.IdSimNavigation)
                     .WithMany(p => p.Router)
@@ -111,9 +124,7 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
             {
                 entity.ToTable("Router_interface");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdRouter).HasColumnName("id_router");
 
@@ -148,9 +159,7 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
             {
                 entity.ToTable("Router_switch");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdRouter).HasColumnName("id_router");
 
@@ -171,9 +180,7 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
 
             modelBuilder.Entity<Simulation>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.DateAdd)
                     .HasColumnName("date_add")
@@ -191,9 +198,7 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
 
             modelBuilder.Entity<Switch>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdSim).HasColumnName("id_sim");
 
@@ -201,6 +206,13 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
                     .HasColumnName("name")
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.NodeNumber)
+                    .HasColumnName("node_number")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SwitchNumber).HasColumnName("switch_number");
 
                 entity.HasOne(d => d.IdSimNavigation)
                     .WithMany(p => p.Switch)

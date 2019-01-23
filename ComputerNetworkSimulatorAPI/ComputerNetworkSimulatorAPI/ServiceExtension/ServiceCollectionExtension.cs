@@ -1,5 +1,7 @@
-﻿using ComputerNetworkSimulatorAPI.Interfaces;
+﻿using AutoMapper;
+using ComputerNetworkSimulatorAPI.Interfaces;
 using ComputerNetworkSimulatorAPI.Models.Database;
+using ComputerNetworkSimulatorAPI.Models.SimulationDTO;
 using ComputerNetworkSimulatorAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,7 @@ namespace DependencyResolver
         public static IServiceCollection AddCustomModules(this IServiceCollection services)
         {
             services.AddScoped<ITestFeature, TestFeature>();
+            services.AddScoped<ISimulationService, SimulationService>();
 
             return services;
         }
