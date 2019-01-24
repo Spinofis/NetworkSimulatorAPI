@@ -11,6 +11,7 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
         public string IpHost { get; set; }
         public string IpNet { get; set; }
         public string Mask { get; set; }
+        public string ConnectedNodeNumber { get; set; }
 
         public Router IdRouterNavigation { get; set; }
     }

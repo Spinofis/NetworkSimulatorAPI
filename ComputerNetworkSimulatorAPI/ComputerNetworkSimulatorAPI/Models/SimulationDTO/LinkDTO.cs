@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace ComputerNetworkSimulatorAPI.Models.SimulationDTO
 {
-    public class SwitchDTO
+    public class LinkDTO
     {
         public int Id { get; set; }
-        public string NodeNumber { get; set; }
-        public int? SwitchNumber { get; set; }
-        public string Name { get; set; }
+        public int IdSim { get; set; }
+        public string NodeNumber1 { get; set; }
+        public string NodeNumber2 { get; set; }
     }
 }

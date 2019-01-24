@@ -9,5 +9,7 @@ namespace ComputerNetworkSimulatorAPI.Interfaces
     public interface ISimulationService
     {
         SimulationDTO SaveSimulation(SimulationDTO simulation);
+        List<SimulationDTO> GetSimulationList();
+        SimulationDTO GetSimulation(int simId);
     }
 }

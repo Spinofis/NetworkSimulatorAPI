@@ -10,8 +10,9 @@ namespace ComputerNetworkSimulatorAPI.Models.SimulationDTO
         public int Id { get; set; }
         public string Name { get; set; }
         public string IpHost { get; set; }
-        public string IpNet {get;set;}
+        public string IpNet { get; set; }
         public string Mask { get; set; }
+        public string connectedNodeNumber { get; set; }
 
     }
 }

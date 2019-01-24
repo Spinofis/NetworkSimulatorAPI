@@ -15,6 +15,7 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
         {
         }
 
+        public virtual DbSet<Links> Links { get; set; }
         public virtual DbSet<Pc> Pc { get; set; }
         public virtual DbSet<PcSwitch> PcSwitch { get; set; }
         public virtual DbSet<Router> Router { get; set; }
@@ -34,6 +35,22 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Links>(entity =>
+            {
+                entity.Property(e => e.NodeNumber1)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NodeNumber2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdSimNavigation)
+                    .WithMany(p => p.Links)
+                    .HasForeignKey(d => d.IdSim)
+                    .HasConstraintName("FK_Links_Simulation");
+            });
+
             modelBuilder.Entity<Pc>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -125,6 +142,11 @@ namespace ComputerNetworkSimulatorAPI.Models.Database
                 entity.ToTable("Router_interface");
 
                 entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.ConnectedNodeNumber)
+                    .HasColumnName("connectedNodeNumber")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IdRouter).HasColumnName("id_router");
 

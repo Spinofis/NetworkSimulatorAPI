@@ -19,17 +19,48 @@ namespace ComputerNetworkSimulatorAPI.Controllers
             this.businessLogic = businessLogic;
         }
 
-        [HttpGet("TestMethod")]
-        public ActionResult TestMethod()
-        {
-            return Ok("dupa123");
-        }
-
         [HttpPost("SaveSimulation")]
         public ActionResult SaveSimulation(SimulationDTO simulation)
         {
-            businessLogic.SaveSimulation(simulation);
-            return Ok(simulation);
+            try
+            {
+                var output = businessLogic.SaveSimulation(simulation);
+                return Ok(output);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpGet("GetSimulationList")]
+        public ActionResult GetSimulationList()
+        {
+            try
+            {
+                var output = businessLogic.GetSimulationList();
+                if (output == null) return NotFound();
+                return Ok(output);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpGet("GetSimulation")]
+        public ActionResult GetSimulation(int simId)
+        {
+            try
+            {
+                var output = businessLogic.GetSimulation(simId);
+                if (output == null) return NotFound();
+                return Ok(output);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
         }
     }
 }
