@@ -43,48 +43,11 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                     if (linkDto1 == null && linkDto2 == null)
                         context.Remove(x);
                 });
-
-            //var pcSwitches = (from pcSwitch in context.PcSwitch
-            //                  join pc in context.Pc on pcSwitch.IdPc equals pc.Id
-            //                  where pc.IdSim == simulationDto.Id
-            //                  select pcSwitch).ToList();
-
-            //foreach (PcSwitch pcSwitch in pcSwitches)
-            //{
-            //    PcSwitchDTO pcSwitchDTO = simulationDto.PcSwitches
-            //        .Where(x => x.Pc.NodeNumber == pcSwitch.IdPcNavigation.NodeNumber && x.Switch.NodeNumber == pcSwitch.IdSwitchNavigation.NodeNumber)
-            //        .FirstOrDefault();
-
-            //    if (pcSwitchDTO == null)
-            //        context.Remove(pcSwitch);
-            //}
-
-
-            //var routerSwitches = (from routerSwitch in context.RouterSwitch
-            //                      join router in context.Router on routerSwitch.IdRouter equals router.Id
-            //                      where router.IdSim == simulationDto.Id
-            //                      select routerSwitch).ToList();
-
-            //foreach (RouterSwitch routerSwitch in routerSwitches)
-            //{
-            //    RouterSwitchDTO routerSwitchDTO = simulationDto.RouterSwitches
-            //        .Where(x => x.Router.NodeNumber == routerSwitch.IdRouterNavigation.NodeNumber && x.Switch.NodeNumber == routerSwitch.IdSwitchNavigation.NodeNumber)
-            //        .FirstOrDefault();
-
-            //    if (routerSwitchDTO == null)
-            //        context.Remove(routerSwitch);
-            //}
+            context.SaveChanges();
         }
 
         public void RemoveRouters(SimulationDTO simulationDto)
         {
-            //var routerInterfaces = (from interfaces in context.RouterInterface
-            //                        join router in context.Router on interfaces.IdRouter equals router.Id
-            //                        where router.IdSim == simulationDto.Id
-            //                        select interfaces).ToList();
-
-
-
             var routers = (from router in context.Router
                            where router.IdSim == simulationDto.Id
                            select router).ToList();
@@ -93,26 +56,35 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
             {
                 if (simulationDto.Routers.Where(y => y.NodeNumber == x.NodeNumber).FirstOrDefault() == null)
                 {
-                    x.RouterInterface
-                    .ToList()
-                    .ForEach(y => context.Remove(y));
+                    var interfaces = (from _interface in context.RouterInterface
+                                      where _interface.IdRouter == x.Id
+                                      select _interface).ToList();
+
+                    RemoveRoutersInterface(interfaces);
                     context.Remove(x);
                 }
-                else
-                {
-                    x.RouterInterface
-                    .ToList()
-                    .ForEach(y =>
-                    {
-                        RouterDTO routerDto = simulationDto.Routers
-                        .Where(z => z.NodeNumber == x.NodeNumber)
-                        .FirstOrDefault();
+                //else
+                //{
+                //    x.RouterInterface
+                //    .ToList()
+                //    .ForEach(y =>
+                //    {
+                //        RouterDTO routerDto = simulationDto.Routers
+                //        .Where(z => z.NodeNumber == x.NodeNumber)
+                //        .FirstOrDefault();
 
-                        if (routerDto != null && routerDto.Interfaces.Where(c => c.Id == y.Id).FirstOrDefault() == null)
-                            context.Remove(y);
-                    });
-                }
+                //        if (routerDto != null && routerDto.Interfaces.Where(c => c.Id == y.Id).FirstOrDefault() == null)
+                //            context.Remove(y);
+                //    });
+                //}
             });
+            context.SaveChanges();
+        }
+
+        private void RemoveRoutersInterface(List<RouterInterface> routerInterfaces)
+        {
+            routerInterfaces.ForEach(x => context.Remove(x));
+            context.SaveChanges();
         }
 
         public void RemovePcs(SimulationDTO simulationDto)
@@ -126,6 +98,8 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                 if (simulationDto.Pcs.Where(y => y.NodeNumber == x.NodeNumber).FirstOrDefault() == null)
                     context.Remove(x);
             });
+            context.SaveChanges();
+
         }
 
         public void RemoveSwitches(SimulationDTO simulationDto)
@@ -137,8 +111,20 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
             switches.ForEach(x =>
             {
                 if (simulationDto.Switches.Where(y => y.NodeNumber == x.NodeNumber).FirstOrDefault() == null)
+                {
+                    var interfaces = (from router in context.Router
+                                      join @interface in context.RouterInterface on router.Id equals @interface.IdRouter
+                                      where router.IdSim == simulationDto.Id
+                                      && @interface.ConnectedNodeNumber == x.NodeNumber
+                                      select @interface).ToList();
+
+                    RemoveRoutersInterface(interfaces);
+
                     context.Remove(x);
+                }
             });
+            context.SaveChanges();
+
         }
 
         public void AddOrUpdateSimulation(SimulationDTO simulationDto, Simulation simulation)
@@ -147,8 +133,6 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
             AddOrUpdateRouter(simulationDto.Routers, simulation);
             AddOrUpdateSwitch(simulationDto.Switches, simulation);
             AddConnections(simulationDto.Links, simulation);
-            //AddPcSwitchConnection(simulationDto.PcSwitches, simulation);
-            //AddRouterSwitchConnection(simulationDto.RouterSwitches, simulation);
         }
 
 
@@ -169,8 +153,6 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                 pc.Gateway = pcDto.Gateway;
                 if (pcDto.Id == 0)
                     context.Add(pc);
-                //else
-                //    context.Update(pc);
             }
             context.SaveChanges();
         }
@@ -213,7 +195,7 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                 if (interfaceDto.Id == 0)
                     context.Add(routerInterface);
             }
-
+            context.SaveChanges();
         }
 
         public void AddOrUpdateSwitch(List<SwitchDTO> switchesDto, Simulation simulation)
@@ -255,58 +237,7 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                         NodeNumber2 = x.NodeNumber2
                     });
             });
+            context.SaveChanges();
         }
-
-        //public void AddPcSwitchConnection(List<PcSwitchDTO> pcSwitches, Simulation simulation)
-        //{
-        //    foreach (PcSwitchDTO pcSwitchDto in pcSwitches)
-        //    {
-        //        Pc pc = context.Pc
-        //            .Where(x => x.NodeNumber == pcSwitchDto.Pc.NodeNumber && x.IdSimNavigation == simulation)
-        //            .FirstOrDefault();
-
-        //        Switch @switch = context.Switch
-        //            .Where(x => x.NodeNumber == pcSwitchDto.Switch.NodeNumber && x.IdSimNavigation == simulation)
-        //            .FirstOrDefault();
-
-        //        PcSwitch pcSwitch = context.PcSwitch
-        //            .Where(x => x.IdPcNavigation == pc && x.IdSwitchNavigation == x.IdSwitchNavigation)
-        //            .FirstOrDefault();
-
-        //        if (pcSwitch == null)
-        //        {
-        //            pcSwitch = new PcSwitch();
-        //            pcSwitch.IdPcNavigation = pc;
-        //            pcSwitch.IdSwitchNavigation = @switch;
-        //            context.Add(pcSwitch);
-        //        }
-        //    }
-        //}
-
-        //public void AddRouterSwitchConnection(List<RouterSwitchDTO> routerSwitchesDto, Simulation simulation)
-        //{
-        //    foreach (RouterSwitchDTO routerSwitchDto in routerSwitchesDto)
-        //    {
-        //        Router router = context.Router
-        //            .Where(x => x.NodeNumber == routerSwitchDto.Router.NodeNumber && x.IdSimNavigation == simulation)
-        //            .FirstOrDefault();
-
-        //        Switch @switch = context.Switch
-        //            .Where(x => x.NodeNumber == routerSwitchDto.Switch.NodeNumber && x.IdSimNavigation == simulation)
-        //            .FirstOrDefault();
-
-        //        RouterSwitch routerSwitch = context.RouterSwitch
-        //            .Where(x => x.IdRouterNavigation == router && x.IdSwitchNavigation == x.IdSwitchNavigation)
-        //            .FirstOrDefault();
-
-        //        if (routerSwitch == null)
-        //        {
-        //            routerSwitch = new RouterSwitch();
-        //            routerSwitch.IdRouterNavigation = router;
-        //            routerSwitch.IdSwitchNavigation = @switch;
-        //            context.Add(routerSwitch);
-        //        }
-        //    }
-        //}
     }
 }
