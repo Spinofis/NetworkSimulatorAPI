@@ -11,5 +11,6 @@ namespace ComputerNetworkSimulatorAPI.Interfaces
         SimulationDTO SaveSimulation(SimulationDTO simulation);
         List<SimulationDTO> GetSimulationList();
         SimulationDTO GetSimulation(int simId);
+        bool PingHost(string hostName);
     }
 }

@@ -56,34 +56,9 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
             {
                 if (simulationDto.Routers.Where(y => y.NodeNumber == x.NodeNumber).FirstOrDefault() == null)
                 {
-                    var interfaces = (from _interface in context.RouterInterface
-                                      where _interface.IdRouter == x.Id
-                                      select _interface).ToList();
-
-                    RemoveRoutersInterface(interfaces);
                     context.Remove(x);
                 }
-                //else
-                //{
-                //    x.RouterInterface
-                //    .ToList()
-                //    .ForEach(y =>
-                //    {
-                //        RouterDTO routerDto = simulationDto.Routers
-                //        .Where(z => z.NodeNumber == x.NodeNumber)
-                //        .FirstOrDefault();
-
-                //        if (routerDto != null && routerDto.Interfaces.Where(c => c.Id == y.Id).FirstOrDefault() == null)
-                //            context.Remove(y);
-                //    });
-                //}
             });
-            context.SaveChanges();
-        }
-
-        private void RemoveRoutersInterface(List<RouterInterface> routerInterfaces)
-        {
-            routerInterfaces.ForEach(x => context.Remove(x));
             context.SaveChanges();
         }
 
@@ -112,19 +87,10 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
             {
                 if (simulationDto.Switches.Where(y => y.NodeNumber == x.NodeNumber).FirstOrDefault() == null)
                 {
-                    var interfaces = (from router in context.Router
-                                      join @interface in context.RouterInterface on router.Id equals @interface.IdRouter
-                                      where router.IdSim == simulationDto.Id
-                                      && @interface.ConnectedNodeNumber == x.NodeNumber
-                                      select @interface).ToList();
-
-                    RemoveRoutersInterface(interfaces);
-
                     context.Remove(x);
                 }
             });
             context.SaveChanges();
-
         }
 
         public void AddOrUpdateSimulation(SimulationDTO simulationDto, Simulation simulation)
@@ -145,12 +111,10 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                     pc = new Pc();
                 pc.Id = pcDto.Id;
                 pc.IdSimNavigation = simulation;
-                pc.Ip = pcDto.Ip;
-                pc.Mask = pcDto.Mask;
                 pc.Name = pcDto.Name;
                 pc.NodeNumber = pcDto.NodeNumber;
                 pc.PcNumber = pcDto.PcNumber;
-                pc.Gateway = pcDto.Gateway;
+                pc.HostIdentity = pcDto.HostIdentity;
                 if (pcDto.Id == 0)
                     context.Add(pc);
             }
@@ -169,33 +133,13 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                 router.Name = routerDto.Name;
                 router.RouterNumber = routerDto.RouterNumber;
                 router.NodeNumber = routerDto.NodeNumber;
+                router.HostIdentity = routerDto.HostIdentity;
                 if (routerDto.Id == 0)
                     context.Add(router);
                 context.SaveChanges();
-                AddOrUpdateRouterInterafces(routerDto.Interfaces, router);
             }
             context.SaveChanges();
 
-        }
-
-        public void AddOrUpdateRouterInterafces(List<RouterInterfaceDTO> interfcesDto, Router router)
-        {
-            foreach (RouterInterfaceDTO interfaceDto in interfcesDto)
-            {
-                RouterInterface routerInterface = context.RouterInterface.Where(x => x.Id == interfaceDto.Id).FirstOrDefault();
-                if (routerInterface == null)
-                    routerInterface = new RouterInterface();
-                routerInterface.Id = interfaceDto.Id;
-                routerInterface.IdRouterNavigation = router;
-                routerInterface.IpHost = interfaceDto.IpHost;
-                routerInterface.IpNet = interfaceDto.IpNet;
-                routerInterface.Mask = interfaceDto.Mask;
-                routerInterface.Name = interfaceDto.Name;
-                routerInterface.ConnectedNodeNumber = interfaceDto.connectedNodeNumber;
-                if (interfaceDto.Id == 0)
-                    context.Add(routerInterface);
-            }
-            context.SaveChanges();
         }
 
         public void AddOrUpdateSwitch(List<SwitchDTO> switchesDto, Simulation simulation)
@@ -210,6 +154,7 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                 @switch.Name = switchDto.Name;
                 @switch.NodeNumber = switchDto.NodeNumber;
                 @switch.SwitchNumber = switchDto.SwitchNumber;
+                @switch.HostIdentity = switchDto.HostIdentity;
                 if (switchDto.Id == 0)
                     context.Add(@switch);
             }

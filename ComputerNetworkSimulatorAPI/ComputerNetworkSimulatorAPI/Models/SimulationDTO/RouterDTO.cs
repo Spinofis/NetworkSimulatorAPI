@@ -11,6 +11,6 @@ namespace ComputerNetworkSimulatorAPI.Models.SimulationDTO
         public string NodeNumber { get; set; }
         public int? RouterNumber { get; set; }
         public string Name { get; set; }
-        public List<RouterInterfaceDTO> Interfaces { get; set; }
+        public string HostIdentity { get; set; }
     }
 }

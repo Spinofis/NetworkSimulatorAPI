@@ -23,9 +23,7 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                     select new PcDTO()
                     {
                         Id = pc.Id,
-                        Ip = pc.Ip,
-                        Mask = pc.Mask,
-                        Gateway = pc.Gateway,
+                        HostIdentity = pc.HostIdentity,
                         Name = pc.Name,
                         NodeNumber = pc.NodeNumber,
                         PcNumber = pc.PcNumber
@@ -41,7 +39,8 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                         Id = _switch.Id,
                         Name = _switch.Name,
                         NodeNumber = _switch.NodeNumber,
-                        SwitchNumber = _switch.SwitchNumber
+                        SwitchNumber = _switch.SwitchNumber,
+                        HostIdentity = _switch.HostIdentity
                     }).ToList();
         }
 
@@ -54,28 +53,15 @@ namespace ComputerNetworkSimulatorAPI.ServiceHelpers
                                Id = router.Id,
                                Name = router.Name,
                                NodeNumber = router.NodeNumber,
-                               RouterNumber = router.RouterNumber
+                               RouterNumber = router.RouterNumber,
+                               HostIdentity = router.HostIdentity
                            }).ToList();
 
-            routers.ForEach(x => x.Interfaces = GetInterfaces(x.Id));
 
             return routers;
         }
 
-        public List<RouterInterfaceDTO> GetInterfaces(int routerId)
-        {
-            return (from _interface in context.RouterInterface
-                    where _interface.IdRouter == routerId
-                    select new RouterInterfaceDTO()
-                    {
-                        Id = _interface.Id,
-                        IpHost = _interface.IpHost,
-                        IpNet = _interface.IpNet,
-                        Mask = _interface.Mask,
-                        Name = _interface.Name,
-                        connectedNodeNumber = _interface.ConnectedNodeNumber
-                    }).ToList();
-        }
+
 
         public List<LinkDTO> GetLinks(int simId)
         {

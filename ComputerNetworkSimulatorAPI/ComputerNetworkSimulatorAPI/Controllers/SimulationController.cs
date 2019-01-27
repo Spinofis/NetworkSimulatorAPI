@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace ComputerNetworkSimulatorAPI.Controllers
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class SimulationController : ControllerBase
@@ -58,6 +55,20 @@ namespace ComputerNetworkSimulatorAPI.Controllers
             {
                 var output = businessLogic.GetSimulation(simId);
                 if (output == null) return NotFound();
+                return Ok(output);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpGet("PingHost")]
+        public ActionResult PingHost(string hostName)
+        {
+            try
+            {
+                var output = businessLogic.PingHost(hostName);
                 return Ok(output);
             }
             catch (Exception ex)

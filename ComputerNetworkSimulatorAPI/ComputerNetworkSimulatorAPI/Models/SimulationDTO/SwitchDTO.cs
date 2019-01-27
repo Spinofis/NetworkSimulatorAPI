@@ -11,5 +11,7 @@ namespace ComputerNetworkSimulatorAPI.Models.SimulationDTO
         public string NodeNumber { get; set; }
         public int? SwitchNumber { get; set; }
         public string Name { get; set; }
+        public string HostIdentity { get; set; }
+
     }
 }
