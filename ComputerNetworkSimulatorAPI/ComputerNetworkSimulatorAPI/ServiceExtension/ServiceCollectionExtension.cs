@@ -13,7 +13,6 @@ namespace DependencyResolver
     {
         public static IServiceCollection AddCustomModules(this IServiceCollection services)
         {
-            services.AddScoped<ITestFeature, TestFeature>();
             services.AddScoped<ISimulationService, SimulationService>();
 
             return services;
