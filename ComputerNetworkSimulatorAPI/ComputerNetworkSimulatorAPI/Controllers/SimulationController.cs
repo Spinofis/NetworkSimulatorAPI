@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ComputerNetworkSimulatorAPI.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class SimulationController : ControllerBase
