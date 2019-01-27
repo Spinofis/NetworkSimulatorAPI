@@ -63,12 +63,12 @@ namespace ComputerNetworkSimulatorAPI.Controllers
             }
         }
 
-        [HttpGet("PingHost")]
-        public ActionResult PingHost(string hostName)
+        [HttpGet("PingHost/{hostIdentity}")]
+        public ActionResult PingHost(string hostIdentity)
         {
             try
             {
-                var output = businessLogic.PingHost(hostName);
+                var output = businessLogic.PingHost(hostIdentity);
                 return Ok(output);
             }
             catch (Exception ex)

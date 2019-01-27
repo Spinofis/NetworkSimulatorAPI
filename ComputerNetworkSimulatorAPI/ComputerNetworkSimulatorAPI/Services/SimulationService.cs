@@ -91,18 +91,25 @@ namespace ComputerNetworkSimulatorAPI.Services
 
         public bool PingHost(string hostName)
         {
-            Ping pingSender = new Ping();
-            string data = "aaaaaaaaaaa";
-            byte[] buffer = Encoding.ASCII.GetBytes(data);
-            int timeout = 10000;
-            PingOptions pingOptions = new PingOptions(64, true);
-            PingReply pingReplay = pingSender.Send(hostName, timeout, buffer, pingOptions);
-
-            if (pingReplay.Status == IPStatus.Success)
+            try
             {
-                return true;
+                Ping pingSender = new Ping();
+                string data = "aaaaaaaaaaa";
+                byte[] buffer = Encoding.ASCII.GetBytes(data);
+                int timeout = 10000;
+                PingOptions pingOptions = new PingOptions(64, true);
+                PingReply pingReplay = pingSender.Send(hostName, timeout, buffer, pingOptions);
+
+                if (pingReplay.Status == IPStatus.Success)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
+            catch (PingException ex)
             {
                 return false;
             }
